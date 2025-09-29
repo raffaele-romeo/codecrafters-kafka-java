@@ -18,8 +18,9 @@ public class RequestDecoder extends ReplayingDecoder<Request> {
     protected void decode(ChannelHandlerContext ctx,
                           ByteBuf in, List<Object> out) throws Exception {
 
+        var messageSize = in.readInt();
         var requestHeader = new RequestHeader(in.readShort(), in.readShort(), in.readInt());
-        var request = new Request(in.readInt(), requestHeader);
+        var request = new Request(messageSize, requestHeader);
         out.add(request);
     }
 }
