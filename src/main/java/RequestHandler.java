@@ -2,16 +2,18 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import model.Header;
-import model.KafkaResponse;
+import model.Request;
+import model.ResponseHeader;
+import model.Response;
 
-public class ProcessingHandler extends ChannelInboundHandlerAdapter {
+public class RequestHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
-        var header = new Header(7);
-        KafkaResponse responseData = new KafkaResponse(8, header);
+        Request request = (Request) msg;
+        var header = new ResponseHeader(request.header().correlationId());
+        Response responseData = new Response(0, header);
         ChannelFuture future = ctx.writeAndFlush(responseData);
         future.addListener(ChannelFutureListener.CLOSE);
         System.out.println(responseData);

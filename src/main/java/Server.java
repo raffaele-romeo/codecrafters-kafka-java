@@ -3,10 +3,10 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class KafkaServer {
+public class Server {
     private final int port;
 
-    public KafkaServer(int port) {
+    public Server(int port) {
         this.port = port;
     }
 
@@ -29,7 +29,7 @@ public class KafkaServer {
                     // Netty creates a separate channel to manage the communication with the client once the connection is accepted
                     // It creates a new handler instance per channel.
                     // The logic should be defined in the pipeline as a list of consecutive steps
-                    .childHandler(new ServerInitializer())
+                    .childHandler(new BrokerInitializer())
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
                     .childOption(ChannelOption.SO_REUSEADDR, true);
