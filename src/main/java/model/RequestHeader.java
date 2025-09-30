@@ -12,7 +12,7 @@ public class RequestHeader {
     public RequestHeader(ByteBuf buf) {
         this.requestApiKey = buf.readShort();
         this.requestApiVersion = buf.readShort();
-        this.correlationId = buf.readShort();
+        this.correlationId = buf.readInt();
         //this.clientId = PrimitiveTypesReader.readNullableString(buf);
     }
 
