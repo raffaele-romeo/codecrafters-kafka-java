@@ -12,10 +12,11 @@ public class RequestHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
         Request request = (Request) msg;
-        var header = new ResponseHeader(request.header().correlationId());
+        var header = new ResponseHeader(request.getHeader().getCorrelationId());
         Response responseData = new Response(0, header);
         ChannelFuture future = ctx.writeAndFlush(responseData);
         future.addListener(ChannelFutureListener.CLOSE);
-        System.out.println(responseData);
+        System.out.println(responseData.getMessageSize());
+        System.out.println(responseData.getHeader().getCorrelationId());
     }
 }

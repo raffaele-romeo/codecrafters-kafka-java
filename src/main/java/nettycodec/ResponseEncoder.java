@@ -11,7 +11,7 @@ public class ResponseEncoder
     @Override
     protected void encode(ChannelHandlerContext ctx,
                           Response response, ByteBuf out) throws Exception {
-        out.writeInt(response.messageSize());
-        out.writeInt(response.header().correlationId());
+        out.writeInt(response.getMessageSize());
+        out.writeInt(response.getHeader().getCorrelationId());
     }
 }
