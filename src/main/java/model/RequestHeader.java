@@ -1,7 +1,6 @@
 package model;
 
 import io.netty.buffer.ByteBuf;
-import protocol.PrimitiveTypesReader;
 
 public class RequestHeader {
     private short requestApiKey;
@@ -9,11 +8,18 @@ public class RequestHeader {
     private int correlationId;
     private String clientId;
 
-    public RequestHeader(ByteBuf buf) {
-        this.requestApiKey = buf.readShort();
-        this.requestApiVersion = buf.readShort();
-        this.correlationId = buf.readInt();
-        //this.clientId = PrimitiveTypesReader.readNullableString(buf);
+    private RequestHeader(short requestApiKey, short requestApiVersion, int correlationId) {
+        this.requestApiKey = requestApiKey;
+        this.requestApiVersion = requestApiVersion;
+        this.correlationId = correlationId;
+    }
+
+    public static RequestHeader from(ByteBuf buf) {
+        var requestApiKey = buf.readShort();
+        var requestApiVersion = buf.readShort();
+        var correlationId = buf.readInt();
+
+        return new RequestHeader(requestApiKey, requestApiVersion, correlationId);
     }
 
     public String getClientId() {

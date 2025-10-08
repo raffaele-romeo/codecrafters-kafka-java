@@ -1,5 +1,7 @@
 package model;
 
+import io.netty.buffer.ByteBuf;
+
 public class ResponseHeader {
     private int correlationId;
 
@@ -13,5 +15,9 @@ public class ResponseHeader {
 
     public void setCorrelationId(int correlationId) {
         this.correlationId = correlationId;
+    }
+
+    public void writeTo(ByteBuf byteBuf) {
+        byteBuf.writeInt(correlationId);
     }
 }
