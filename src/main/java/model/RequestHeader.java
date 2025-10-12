@@ -1,5 +1,6 @@
 package model;
 
+import api.RequestBody;
 import io.netty.buffer.ByteBuf;
 
 public class RequestHeader {
@@ -7,19 +8,20 @@ public class RequestHeader {
     private short requestApiVersion;
     private int correlationId;
     private String clientId;
+    private RequestBody body;
 
-    private RequestHeader(short requestApiKey, short requestApiVersion, int correlationId) {
-        this.requestApiKey = requestApiKey;
-        this.requestApiVersion = requestApiVersion;
+    private RequestHeader(short apiKey, short apiVersion, int correlationId) {
+        this.requestApiKey = apiKey;
+        this.requestApiVersion = apiVersion;
         this.correlationId = correlationId;
     }
 
-    public static RequestHeader from(ByteBuf buf) {
-        var requestApiKey = buf.readShort();
-        var requestApiVersion = buf.readShort();
+    public static RequestHeader parse(ByteBuf buf) {
+        var apiKey = buf.readShort();
+        var apiVersion = buf.readShort();
         var correlationId = buf.readInt();
 
-        return new RequestHeader(requestApiKey, requestApiVersion, correlationId);
+        return new RequestHeader(apiKey, apiVersion, correlationId);
     }
 
     public String getClientId() {
@@ -52,5 +54,14 @@ public class RequestHeader {
 
     public void setCorrelationId(int correlationId) {
         this.correlationId = correlationId;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestHeader{" +
+                "correlationId=" + correlationId +
+                ", requestApiVersion=" + requestApiVersion +
+                ", requestApiKey=" + requestApiKey +
+                '}';
     }
 }

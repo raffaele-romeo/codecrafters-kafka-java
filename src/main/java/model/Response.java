@@ -1,29 +1,25 @@
 package model;
 
+import api.ApiResponseHandler;
 import api.ResponseBody;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 public class Response {
-    private int messageSize;
     private ResponseHeader header;
     private ResponseBody body;
 
-    public ResponseHeader getHeader() {
-        return header;
-    }
-
-    public Response(int messageSize, ResponseHeader header, ResponseBody body) {
-        this.messageSize = messageSize;
+    private Response(ResponseHeader header, ResponseBody body) {
         this.header = header;
         this.body = body;
     }
 
-    public int getMessageSize() {
-        return messageSize;
-    }
+    public static Response handle(Request request) {
+        var requestHeader = request.getHeader();
+        var responseHeader = new ResponseHeader(requestHeader.getCorrelationId());
+        var responseBody = ApiResponseHandler.handle(requestHeader.getRequestApiKey(), requestHeader.getRequestApiVersion());
 
-    public void setMessageSize(int messageSize) {
-        this.messageSize = messageSize;
+        return new Response(responseHeader, responseBody);
     }
 
     public void setHeader(ResponseHeader header) {
@@ -38,9 +34,24 @@ public class Response {
         this.body = body;
     }
 
-    public void writeTo (ByteBuf byteBuf) {
-        byteBuf.writeInt(messageSize);
-        header.writeTo(byteBuf);
-        body.writeTo(byteBuf);
+    public ByteBuf serialize() {
+        ByteBuf headerBuf = null;
+        ByteBuf bodyBuf = null;
+
+        try {
+            headerBuf = header.serialize();
+            bodyBuf = body.serialize();
+
+            int totalSize = headerBuf.readableBytes() + bodyBuf.readableBytes();
+
+            ByteBuf response = Unpooled.buffer(totalSize);
+            response.writeBytes(headerBuf);
+            response.writeBytes(bodyBuf);
+
+            return response;
+        } finally {
+            if (headerBuf != null) headerBuf.release();
+            if (bodyBuf != null) bodyBuf.release();
+        }
     }
 }

@@ -14,27 +14,25 @@ public class Request {
         this.header = header;
     }
 
-    public static Request from(ByteBuf in) {
-        var messageSize = in.readInt();
-        var requestHeader = RequestHeader.from(in);
+    public static Request parse(int messageSize, ByteBuf in) {
+        var requestHeader = RequestHeader.parse(in);
 
         return new Request(messageSize, requestHeader);
-    }
-
-    public RequestHeader getHeader() {
-        return header;
     }
 
     public int getMessageSize() {
         return messageSize;
     }
 
-
-    public void setHeader(RequestHeader header) {
-        this.header = header;
+    public RequestHeader getHeader() {
+        return header;
     }
 
-    public void setMessageSize(int messageSize) {
-        this.messageSize = messageSize;
+    @Override
+    public String toString() {
+        return "Request{" +
+                "messageSize=" + messageSize +
+                ", header=" + header.toString() +
+                '}';
     }
 }

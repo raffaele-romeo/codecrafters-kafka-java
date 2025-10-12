@@ -10,7 +10,19 @@ public class ResponseEncoder
 
     @Override
     protected void encode(ChannelHandlerContext ctx,
-                          Response response, ByteBuf out) throws Exception {
-        response.writeTo(out);
+                          Response response, ByteBuf out) {
+        ByteBuf responseBytes = null;
+
+        try {
+            responseBytes = response.serialize();
+            int messageSize = responseBytes.readableBytes();
+
+            out.writeInt(messageSize);
+            out.writeBytes(responseBytes);
+        } finally {
+            if (responseBytes != null) {
+                responseBytes.release();
+            }
+        }
     }
 }

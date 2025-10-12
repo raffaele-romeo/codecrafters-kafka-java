@@ -1,6 +1,7 @@
 package model;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 public class ResponseHeader {
     private int correlationId;
@@ -17,7 +18,16 @@ public class ResponseHeader {
         this.correlationId = correlationId;
     }
 
-    public void writeTo(ByteBuf byteBuf) {
-        byteBuf.writeInt(correlationId);
+    public ByteBuf serialize() {
+        var result = Unpooled.buffer();
+
+        try {
+            result.writeInt(correlationId);
+
+            return result;
+        } catch (Exception e) {
+            result.release();
+            throw e;
+        }
     }
 }
