@@ -1,0 +1,22 @@
+package api.apiversions;
+
+import api.RequestBody;
+import io.netty.buffer.ByteBuf;
+import protocol.PrimitiveTypesReader;
+
+public class ApiVersionRequestBody implements RequestBody {
+    private final String clientSoftwareName;
+    private final String clientSoftwareVersion;
+
+    private ApiVersionRequestBody(String clientSoftwareName, String clientSoftwareVersion) {
+        this.clientSoftwareName = clientSoftwareName;
+        this.clientSoftwareVersion = clientSoftwareVersion;
+    }
+
+    public static ApiVersionRequestBody parse(ByteBuf input) {
+        var clientSoftwareName = PrimitiveTypesReader.readCompactString(input);
+        var clientSoftwareVersion = PrimitiveTypesReader.readCompactString(input);
+
+        return new ApiVersionRequestBody(clientSoftwareName, clientSoftwareVersion);
+    }
+}

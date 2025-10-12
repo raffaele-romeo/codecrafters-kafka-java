@@ -30,4 +30,11 @@ public class ResponseHeader {
             throw e;
         }
     }
+
+    @Override
+    public String toString() {
+        return "ResponseHeader{" +
+                "correlationId=" + correlationId +
+                '}';
+    }
 }

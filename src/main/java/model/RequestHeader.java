@@ -2,26 +2,29 @@ package model;
 
 import api.RequestBody;
 import io.netty.buffer.ByteBuf;
+import protocol.PrimitiveTypesReader;
 
 public class RequestHeader {
-    private short requestApiKey;
-    private short requestApiVersion;
+    private short apiKey;
+    private short apiVersion;
     private int correlationId;
     private String clientId;
     private RequestBody body;
 
-    private RequestHeader(short apiKey, short apiVersion, int correlationId) {
-        this.requestApiKey = apiKey;
-        this.requestApiVersion = apiVersion;
+    private RequestHeader(short apiKey, short apiVersion, int correlationId, String clientId) {
+        this.apiKey = apiKey;
+        this.apiVersion = apiVersion;
         this.correlationId = correlationId;
+        this.clientId = clientId;
     }
 
     public static RequestHeader parse(ByteBuf buf) {
         var apiKey = buf.readShort();
         var apiVersion = buf.readShort();
         var correlationId = buf.readInt();
+        var clientId = PrimitiveTypesReader.readNullableString(buf);
 
-        return new RequestHeader(apiKey, apiVersion, correlationId);
+        return new RequestHeader(apiKey, apiVersion, correlationId, clientId);
     }
 
     public String getClientId() {
@@ -32,20 +35,20 @@ public class RequestHeader {
         this.clientId = clientId;
     }
 
-    public short getRequestApiKey() {
-        return requestApiKey;
+    public short getApiKey() {
+        return apiKey;
     }
 
-    public void setRequestApiKey(short requestApiKey) {
-        this.requestApiKey = requestApiKey;
+    public void setApiKey(short apiKey) {
+        this.apiKey = apiKey;
     }
 
-    public short getRequestApiVersion() {
-        return requestApiVersion;
+    public short getApiVersion() {
+        return apiVersion;
     }
 
-    public void setRequestApiVersion(short requestApiVersion) {
-        this.requestApiVersion = requestApiVersion;
+    public void setApiVersion(short apiVersion) {
+        this.apiVersion = apiVersion;
     }
 
     public int getCorrelationId() {
@@ -60,8 +63,9 @@ public class RequestHeader {
     public String toString() {
         return "RequestHeader{" +
                 "correlationId=" + correlationId +
-                ", requestApiVersion=" + requestApiVersion +
-                ", requestApiKey=" + requestApiKey +
+                ", apiVersion=" + apiVersion +
+                ", apiKey=" + apiKey +
+                ", clientId=" + clientId +
                 '}';
     }
 }

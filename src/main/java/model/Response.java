@@ -17,7 +17,7 @@ public class Response {
     public static Response handle(Request request) {
         var requestHeader = request.getHeader();
         var responseHeader = new ResponseHeader(requestHeader.getCorrelationId());
-        var responseBody = ApiResponseHandler.handle(requestHeader.getRequestApiKey(), requestHeader.getRequestApiVersion());
+        var responseBody = ApiResponseHandler.handle(requestHeader.getApiKey(), requestHeader.getApiVersion());
 
         return new Response(responseHeader, responseBody);
     }
@@ -53,5 +53,13 @@ public class Response {
             if (headerBuf != null) headerBuf.release();
             if (bodyBuf != null) bodyBuf.release();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "header=" + header.toString() +
+                ", body=" + body.toString() +
+                '}';
     }
 }

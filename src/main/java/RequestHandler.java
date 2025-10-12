@@ -1,4 +1,3 @@
-
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -13,9 +12,10 @@ public class RequestHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
             Request request = (Request) msg;
-            Response responseData = Response.handle(request);
+            Response response = Response.handle(request);
 
-            ChannelFuture future = ctx.writeAndFlush(responseData);
+            System.out.println(response.toString());
+            ChannelFuture future = ctx.writeAndFlush(response);
             future.addListener(ChannelFutureListener.CLOSE);
         } finally {
             ReferenceCountUtil.release(msg);

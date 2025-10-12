@@ -38,10 +38,10 @@ public class PrimitiveTypesReader {
         return buf.readCharSequence(length, CHARSET).toString();
     }
 
-   /*
-   	Represents a sequence of characters. First the length N + 1 is given as an UNSIGNED_VARINT .
-   	Then N bytes follow which are the UTF-8 encoding of the character sequence.
-    */
+    /*
+        Represents a sequence of characters. First the length N + 1 is given as an UNSIGNED_VARINT .
+        Then N bytes follow which are the UTF-8 encoding of the character sequence.
+     */
     public static String readCompactString(ByteBuf buf) {
         var length = buf.readInt();
 

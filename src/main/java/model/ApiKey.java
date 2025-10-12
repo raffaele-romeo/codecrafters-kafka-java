@@ -40,4 +40,13 @@ public enum ApiKey {
     public short getKey() {
         return key;
     }
+
+    @Override
+    public String toString() {
+        return "ApiKey{" +
+                "key=" + key +
+                ", minSupportedApiVersion=" + minSupportedApiVersion +
+                ", maxSupportedApiVersion=" + maxSupportedApiVersion +
+                '}';
+    }
 }
