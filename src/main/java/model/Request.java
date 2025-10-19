@@ -17,6 +17,7 @@ public class Request {
 
     public static Request parse(int messageSize, ByteBuf in) {
         var requestHeader = RequestHeader.parse(in);
+        System.out.println(requestHeader);
         var requestBody = ApiRequestBodyParser.parse(requestHeader.getApiKey(), in);
 
         return new Request(messageSize, requestHeader, requestBody);

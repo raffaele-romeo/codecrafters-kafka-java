@@ -1,6 +1,7 @@
 package protocol;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +18,7 @@ public class PrimitiveTypesReader {
         if (buf == null || buf.readableBytes() < 2) {
             return null;
         }
+
 
         var length = buf.readShort();
 
@@ -43,10 +45,16 @@ public class PrimitiveTypesReader {
         Then N bytes follow which are the UTF-8 encoding of the character sequence.
      */
     public static String readCompactString(ByteBuf buf) {
-        if(buf == null || buf.readableBytes() < 4) {
+        if(buf == null || buf.readableBytes() < 1) {
             return null;
         }
-        var length = buf.readInt();
+        var lengthPlusOne = readUnsignedVarint(buf);
+
+        if (lengthPlusOne == 0) {
+            return null;
+        }
+
+        int length = lengthPlusOne - 1;
 
         if (length == 0) {
             return "";
@@ -60,5 +68,25 @@ public class PrimitiveTypesReader {
         }
 
         return buf.readCharSequence(length, CHARSET).toString();
+    }
+
+    public static int readUnsignedVarint(ByteBuf buf) {
+        int value = 0;
+        int shift = 0;
+
+        while (shift < 32) {  // Max 5 bytes (5 * 7 = 35 bits, but we cap at 32)
+            byte b = buf.readByte();
+
+
+            value |= (b & 0x7F) << shift;
+
+            if ((b & 0x80) == 0) {
+                return value;
+            }
+
+            shift += 7;
+        }
+
+        throw new IllegalStateException("Varint is too long");
     }
 }
