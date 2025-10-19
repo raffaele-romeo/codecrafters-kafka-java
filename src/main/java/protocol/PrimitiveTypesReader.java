@@ -89,4 +89,12 @@ public class PrimitiveTypesReader {
 
         throw new IllegalStateException("Varint is too long");
     }
+
+    public static void writeUnsignedVarint(ByteBuf buf, int value) {
+        while ((value & 0xFFFFFF80) != 0) {
+            buf.writeByte((byte)((value & 0x7F) | 0x80));
+            value >>= 7;
+        }
+        buf.writeByte((byte)(value & 0x7F));
+    }
 }

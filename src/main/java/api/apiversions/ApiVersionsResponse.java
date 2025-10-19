@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import model.ApiKey;
 import model.ErrorCode;
+import protocol.PrimitiveTypesReader;
 
 final public class ApiVersionsResponse implements ResponseBody {
     private final ApiResponseVersionData apiResponseVersionData;
@@ -30,14 +31,14 @@ final public class ApiVersionsResponse implements ResponseBody {
         try {
             result.writeShort(apiResponseVersionData.errorCode());
             int apiKeysLength = apiResponseVersionData.apiKeys().length;
-            result.writeByte(apiKeysLength + 1);
+            PrimitiveTypesReader.writeUnsignedVarint(result, apiKeysLength + 1);
 
             for (ApiKey apiKey : apiResponseVersionData.apiKeys()) {
                 result.writeBytes(apiKey.serialize());
-                result.writeByte(0);
             }
 
             result.writeInt(apiResponseVersionData.throttleTimeMs());
+            PrimitiveTypesReader.writeUnsignedVarint(result, 0);  // TAG_BUFFER
 
             return result;
         } catch (Exception e) {
