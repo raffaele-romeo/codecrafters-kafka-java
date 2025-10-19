@@ -16,6 +16,7 @@ public class ApiVersionRequestBody implements RequestBody {
     public static ApiVersionRequestBody parse(ByteBuf input) {
         var clientSoftwareName = PrimitiveTypesReader.readCompactString(input);
         var clientSoftwareVersion = PrimitiveTypesReader.readCompactString(input);
+        input.readByte(); // Tag buffer - discarded for now
 
         return new ApiVersionRequestBody(clientSoftwareName, clientSoftwareVersion);
     }

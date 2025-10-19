@@ -21,6 +21,7 @@ public class RequestHeader {
         var apiVersion = buf.readShort();
         var correlationId = buf.readInt();
         var clientId = PrimitiveTypesReader.readNullableString(buf);
+        buf.readByte(); // Tag buffer - discarded for now
 
         return new RequestHeader(apiKey, apiVersion, correlationId, clientId);
     }
