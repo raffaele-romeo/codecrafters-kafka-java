@@ -19,4 +19,12 @@ public class ApiVersionRequestBody implements RequestBody {
 
         return new ApiVersionRequestBody(clientSoftwareName, clientSoftwareVersion);
     }
+
+    @Override
+    public String toString() {
+        return "ApiVersionRequestBody{" +
+                "clientSoftwareName='" + clientSoftwareName + '\'' +
+                ", clientSoftwareVersion='" + clientSoftwareVersion + '\'' +
+                '}';
+    }
 }

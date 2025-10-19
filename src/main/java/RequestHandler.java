@@ -14,9 +14,8 @@ public class RequestHandler extends ChannelInboundHandlerAdapter {
             Request request = (Request) msg;
             Response response = Response.handle(request);
 
-            System.out.println(response.toString());
-            ChannelFuture future = ctx.writeAndFlush(response);
-            future.addListener(ChannelFutureListener.CLOSE);
+            System.out.println(response);
+            ctx.writeAndFlush(response);
         } finally {
             ReferenceCountUtil.release(msg);
         }

@@ -7,14 +7,13 @@ import model.ApiKey;
 import model.ErrorCode;
 
 final public class ApiVersionsResponse implements ResponseBody {
-    private static final int VERSION = 4;
     private final ApiResponseVersionData apiResponseVersionData;
 
     private ApiVersionsResponse(ApiResponseVersionData apiResponseVersionData) {
         this.apiResponseVersionData = apiResponseVersionData;
     }
 
-    public static ApiVersionsResponse from(int version) {
+    public static ApiVersionsResponse make(int version) {
         ApiResponseVersionData apiResponseVersionData;
         if (version != 4) {
             apiResponseVersionData = new ApiResponseVersionData(ErrorCode.UNSUPPORTED_VERSION.getCode(), new ApiKey[]{}, 0);
@@ -35,22 +34,15 @@ final public class ApiVersionsResponse implements ResponseBody {
 
             for (ApiKey apiKey : apiResponseVersionData.apiKeys()) {
                 result.writeBytes(apiKey.serialize());
-                result.writeByte(0); // tagged_fields for the response
             }
 
             result.writeInt(apiResponseVersionData.throttleTimeMs());
-            result.writeByte(0); // tagged_fields for the response
 
             return result;
         } catch (Exception e) {
             result.release();
             throw e;
         }
-    }
-
-    @Override
-    public int getVersion() {
-        return VERSION;
     }
 
     @Override

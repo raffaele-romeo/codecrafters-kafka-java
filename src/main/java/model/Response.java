@@ -1,13 +1,13 @@
 package model;
 
-import api.ApiResponseHandler;
+import api.ApiResponseFactory;
 import api.ResponseBody;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 public class Response {
-    private ResponseHeader header;
-    private ResponseBody body;
+    private final ResponseHeader header;
+    private final ResponseBody body;
 
     private Response(ResponseHeader header, ResponseBody body) {
         this.header = header;
@@ -17,21 +17,9 @@ public class Response {
     public static Response handle(Request request) {
         var requestHeader = request.getHeader();
         var responseHeader = new ResponseHeader(requestHeader.getCorrelationId());
-        var responseBody = ApiResponseHandler.handle(requestHeader.getApiKey(), requestHeader.getApiVersion());
+        var responseBody = ApiResponseFactory.make(requestHeader.getApiKey(), requestHeader.getApiVersion());
 
         return new Response(responseHeader, responseBody);
-    }
-
-    public void setHeader(ResponseHeader header) {
-        this.header = header;
-    }
-
-    public ResponseBody getBody() {
-        return body;
-    }
-
-    public void setBody(ResponseBody body) {
-        this.body = body;
     }
 
     public ByteBuf serialize() {

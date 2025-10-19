@@ -43,7 +43,21 @@ public class PrimitiveTypesReader {
         Then N bytes follow which are the UTF-8 encoding of the character sequence.
      */
     public static String readCompactString(ByteBuf buf) {
+        if(buf == null || buf.readableBytes() < 4) {
+            return null;
+        }
         var length = buf.readInt();
+
+        if (length == 0) {
+            return "";
+        }
+
+        if (buf.readableBytes() < length) {
+            throw new IllegalStateException(
+                    String.format("Not enough bytes to read string. Expected: %d, available: %d",
+                            length, buf.readableBytes())
+            );
+        }
 
         return buf.readCharSequence(length, CHARSET).toString();
     }

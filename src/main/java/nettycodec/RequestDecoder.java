@@ -29,7 +29,7 @@ public class RequestDecoder extends ByteToMessageDecoder {
 
         Request request = Request.parse(messageSize, in);
 
-        System.out.println(request.toString());
+        System.out.println(request);
         out.add(request);
     }
 }
