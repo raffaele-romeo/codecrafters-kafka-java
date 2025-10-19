@@ -34,6 +34,7 @@ final public class ApiVersionsResponse implements ResponseBody {
 
             for (ApiKey apiKey : apiResponseVersionData.apiKeys()) {
                 result.writeBytes(apiKey.serialize());
+                result.writeByte(0);
             }
 
             result.writeInt(apiResponseVersionData.throttleTimeMs());
