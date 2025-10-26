@@ -1,7 +1,7 @@
 package model;
 
 import io.netty.buffer.ByteBuf;
-import protocol.PrimitiveTypesReader;
+import protocol.NullableString;
 
 public class RequestHeader {
     private final short apiKey;
@@ -20,7 +20,7 @@ public class RequestHeader {
         var apiKey = buf.readShort();
         var apiVersion = buf.readShort();
         var correlationId = buf.readInt();
-        var clientId = PrimitiveTypesReader.readNullableString(buf);
+        var clientId = NullableString.read(buf);
         buf.readByte(); // Tag buffer - discarded for now
 
         return new RequestHeader(apiKey, apiVersion, correlationId, clientId);

@@ -4,41 +4,26 @@ import api.ResponseBody;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import model.ApiKey;
-import model.ErrorCode;
-import protocol.PrimitiveTypesReader;
+import protocol.UnsignedVarInt;
 
-final public class ApiVersionsResponse implements ResponseBody {
-    private final ApiResponseVersionData apiResponseVersionData;
+import java.util.Arrays;
 
-    private ApiVersionsResponse(ApiResponseVersionData apiResponseVersionData) {
-        this.apiResponseVersionData = apiResponseVersionData;
-    }
-
-    public static ApiVersionsResponse make(int version) {
-        ApiResponseVersionData apiResponseVersionData;
-        if (version != 4) {
-            apiResponseVersionData = new ApiResponseVersionData(ErrorCode.UNSUPPORTED_VERSION.getCode(), new ApiKey[]{}, 0);
-        } else {
-            apiResponseVersionData = new ApiResponseVersionData(ErrorCode.NONE.getCode(), ApiKey.values(), 0);
-        }
-
-        return new ApiVersionsResponse(apiResponseVersionData);
-    }
+public record ApiVersionsResponse(short errorCode, ApiKey[] apiKeys, int throttleTimeMs) implements ResponseBody {
 
     @Override
     public ByteBuf serialize() {
         var result = Unpooled.buffer();
         try {
-            result.writeShort(apiResponseVersionData.errorCode());
-            int apiKeysLength = apiResponseVersionData.apiKeys().length;
-            PrimitiveTypesReader.writeUnsignedVarint(result, apiKeysLength + 1);
+            result.writeShort(errorCode);
+            int apiKeysLength = apiKeys.length;
+            UnsignedVarInt.write(result, apiKeysLength + 1);
 
-            for (ApiKey apiKey : apiResponseVersionData.apiKeys()) {
+            for (ApiKey apiKey : apiKeys) {
                 result.writeBytes(apiKey.serialize());
             }
 
-            result.writeInt(apiResponseVersionData.throttleTimeMs());
-            PrimitiveTypesReader.writeUnsignedVarint(result, 0);  // TAG_BUFFER
+            result.writeInt(throttleTimeMs);
+            UnsignedVarInt.write(result, 0);  // TAG_BUFFER
 
             return result;
         } catch (Exception e) {
@@ -49,8 +34,10 @@ final public class ApiVersionsResponse implements ResponseBody {
 
     @Override
     public String toString() {
-        return "ApiVersionsResponse{" +
-                "apiResponseVersionData=" + apiResponseVersionData.toString() +
+        return "ApiResponseVersionData{" +
+                "errorCode=" + errorCode +
+                ", apiKeys=" + Arrays.toString(apiKeys) +
+                ", throttleTimeMs=" + throttleTimeMs +
                 '}';
     }
 }

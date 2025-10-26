@@ -2,7 +2,7 @@ package model;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import protocol.PrimitiveTypesReader;
+import protocol.UnsignedVarInt;
 
 import java.util.Arrays;
 
@@ -31,7 +31,7 @@ public enum ApiKey {
             result.writeShort(key);
             result.writeShort(minSupportedApiVersion);
             result.writeShort(maxSupportedApiVersion);
-            PrimitiveTypesReader.writeUnsignedVarint(result, 0); // TAG_BUFFER
+            UnsignedVarInt.write(result, 0); // TAG_BUFFER
 
             return result;
         } catch (Exception e) {

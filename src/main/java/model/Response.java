@@ -1,6 +1,6 @@
 package model;
 
-import api.ApiResponseFactory;
+import api.ApiResponseHandler;
 import api.ResponseBody;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -17,7 +17,7 @@ public class Response {
     public static Response handle(Request request) {
         var requestHeader = request.getHeader();
         var responseHeader = new ResponseHeader(requestHeader.getCorrelationId());
-        var responseBody = ApiResponseFactory.make(requestHeader.getApiKey(), requestHeader.getApiVersion());
+        var responseBody = ApiResponseHandler.handle(request);
 
         return new Response(responseHeader, responseBody);
     }

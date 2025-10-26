@@ -2,7 +2,8 @@ package model;
 
 public enum ErrorCode {
     UNSUPPORTED_VERSION(35, false),
-    NONE(0, false);
+    NONE(0, false),
+    UNKNOWN_TOPIC_OR_PARTITION(3, true);
 
     private final short code;
     private final boolean retriable;
