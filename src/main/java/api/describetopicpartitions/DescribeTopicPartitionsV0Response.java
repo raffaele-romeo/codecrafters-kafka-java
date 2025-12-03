@@ -3,14 +3,16 @@ package api.describetopicpartitions;
 import api.ResponseBody;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import model.TopicRequest;
 import model.TopicResponse;
 import protocol.CompactArray;
-import protocol.RawTaggedField;
+import protocol.RawTaggedFields;
 
 import java.util.List;
 
-public record DescribeTopicPartitionsResponse(int throttleTime, List<TopicResponse> topicResponses, byte nextCursor, RawTaggedField taggedField)
+public record DescribeTopicPartitionsV0Response(int throttleTime,
+                                                List<TopicResponse> topicResponses,
+                                                byte nextCursor,
+                                                RawTaggedFields taggedFields)
         implements ResponseBody {
 
     @Override
@@ -18,9 +20,9 @@ public record DescribeTopicPartitionsResponse(int throttleTime, List<TopicRespon
         var result = Unpooled.buffer();
         try {
             result.writeInt(throttleTime);
-            CompactArray.write(result, topicResponses, TopicRequest::write);
+            CompactArray.write(result, topicResponses, (suppliedBuf, topicResponse) -> topicResponse.write(suppliedBuf));
             result.writeByte(nextCursor);
-            taggedField.write(result);
+            taggedFields.write(result);
 
             return result;
         } catch (Exception e) {

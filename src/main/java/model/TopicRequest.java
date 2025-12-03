@@ -12,9 +12,4 @@ public record TopicRequest(String name, RawTaggedField taggedField) {
 
         return new TopicRequest(name, taggedField);
     }
-
-    public static void write(ByteBuf buf, TopicRequest value) {
-        CompactString.write(buf, value.name);
-        buf.writeByte(0);
-    }
 }

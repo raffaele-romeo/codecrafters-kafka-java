@@ -12,6 +12,10 @@ public class RawTaggedField {
         this.data = data;
     }
 
+    public int getTag() {
+        return tag;
+    }
+
     public static RawTaggedField empty() {
         return new RawTaggedField(0, Unpooled.EMPTY_BUFFER);
     }

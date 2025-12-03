@@ -1,12 +1,28 @@
 package model;
 
+import io.netty.buffer.ByteBuf;
+import protocol.*;
+
+import java.util.List;
 import java.util.UUID;
 
 public record TopicResponse(
-        UUID topicId,
+        ErrorCode errorCode,
         String name,
+        UUID topicId,
         boolean isInternal,
         List<PartitionData> partitions,
-        int authorizedOperations,
-        RawTaggedFields taggedFields
-) {}
+        AclOperation authorizedOperations,
+        RawTaggedField taggedFields
+) {
+    public void write(ByteBuf buf) {
+        buf.writeShort(errorCode.getCode());
+        CompactString.write(buf, name);
+        UUIDOps.writeUuid(buf, topicId);
+        buf.writeBoolean(isInternal);
+        CompactArray.write(buf, partitions,
+                (suppliedBuf, value) -> value.write(suppliedBuf));
+        buf.writeByte(authorizedOperations.code());
+        buf.writeByte(0);
+    }
+}

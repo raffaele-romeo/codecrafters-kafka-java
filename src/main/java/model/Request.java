@@ -27,6 +27,10 @@ public class Request {
         return header;
     }
 
+    public RequestBody getBody() {
+        return body;
+    }
+
     @Override
     public String toString() {
         return "Request{" +
