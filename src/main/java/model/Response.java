@@ -1,26 +1,25 @@
 package model;
 
-import api.ApiResponseHandler;
 import api.ResponseBody;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 public class Response {
-    private final ResponseHeader header;
-    private final ResponseBody body;
+    protected final ResponseHeader header;
+    protected final ResponseBody body;
 
-    private Response(ResponseHeader header, ResponseBody body) {
+    protected Response(ResponseHeader header, ResponseBody body) {
         this.header = header;
         this.body = body;
     }
 
-    public static Response handle(Request request) {
-        var requestHeader = request.getHeader();
-        var responseHeader = new ResponseHeader(requestHeader.getCorrelationId());
-        var responseBody = ApiResponseHandler.handle(request);
-
-        return new Response(responseHeader, responseBody);
-    }
+//    public static Response handle(Request request) {
+//        var requestHeader = request.getHeader();
+//        var responseHeader = new ResponseHeaderV0(requestHeader.getCorrelationId());
+//        var responseBody = ApiResponseHandler.handle(request);
+//
+//        return new Response(responseHeader, responseBody);
+//    }
 
     public ByteBuf serialize() {
         ByteBuf headerBuf = null;

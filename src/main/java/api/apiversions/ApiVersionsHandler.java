@@ -1,17 +1,21 @@
 package api.apiversions;
 
+import api.ResponseHandler;
 import model.ApiKey;
 import model.ErrorCode;
+import model.RequestContext;
+import model.ResponseHeaderV0;
 
-final public class ApiVersionsHandler  {
-    public static ApiVersionsResponse handle(int version) {
-        ApiVersionsResponse apiResponseVersion;
-        if (version != 4) {
-            apiResponseVersion = new ApiVersionsResponse(ErrorCode.UNSUPPORTED_VERSION.getCode(), new ApiKey[]{}, 0);
+final public class ApiVersionsHandler extends ResponseHandler<ApiVersionsRequestBody, ApiVersionsResponse> {
+    @Override
+    protected ApiVersionsResponse handle(RequestContext requestContext, ApiVersionsRequestBody requestBody) {
+        ApiVersionsResponseBody apiResponseVersion;
+        if (requestContext.apiVersion() != 4) {
+            apiResponseVersion = new ApiVersionsResponseBody(ErrorCode.UNSUPPORTED_VERSION, new ApiKey[]{}, 0);
         } else {
-            apiResponseVersion = new ApiVersionsResponse(ErrorCode.NONE.getCode(), ApiKey.values(), 0);
+            apiResponseVersion = new ApiVersionsResponseBody(ErrorCode.NONE, ApiKey.values(), 0);
         }
 
-        return apiResponseVersion;
+        return new ApiVersionsResponse(new ResponseHeaderV0(requestContext.correlationId()), apiResponseVersion);
     }
 }

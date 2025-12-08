@@ -1,16 +1,16 @@
 package api.describetopicpartitions;
 
-import model.AclOperation;
-import model.ErrorCode;
-import model.TopicResponse;
+import api.ResponseHandler;
+import model.*;
 import protocol.RawTaggedField;
 import protocol.RawTaggedFields;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class DescribeTopicPartitionsHandler {
-    public static DescribeTopicPartitionsV0Response handle(DescribeTopicPartitionsRequestBody request) {
+final public class DescribeTopicPartitionsHandler extends ResponseHandler<DescribeTopicPartitionsRequestBody, DescribeTopicPartitionsV0Response> {
+    @Override
+    public DescribeTopicPartitionsV0Response handle(RequestContext requestContext, DescribeTopicPartitionsRequestBody request) {
 
         var topicResponse = request.topicRequests().stream().map(topicRequest -> new TopicResponse(
                         ErrorCode.UNKNOWN_TOPIC_OR_PARTITION,
@@ -23,10 +23,10 @@ public class DescribeTopicPartitionsHandler {
                 )
         ).toList();
 
-        return new DescribeTopicPartitionsV0Response(
+        var responseBody = new DescribeTopicPartitionsV0ResponseBody(
                 0,
                 topicResponse, (byte) -1, RawTaggedFields.empty());
+
+        return new DescribeTopicPartitionsV0Response(new ResponseHeaderV1(requestContext.correlationId(), RawTaggedFields.empty()), responseBody);
     }
-
-
 }

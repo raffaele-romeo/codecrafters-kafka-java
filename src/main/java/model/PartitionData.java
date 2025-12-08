@@ -7,7 +7,7 @@ import protocol.RawTaggedField;
 import java.util.List;
 
 public record PartitionData(
-        short errorCode,
+        ErrorCode errorCode,
         int partitionIndex,
         int leaderId,
         int leaderEpoch,
@@ -19,7 +19,7 @@ public record PartitionData(
         RawTaggedField taggedFields
 ) {
     public void write(ByteBuf buf) {
-        buf.writeShort(errorCode);
+        buf.writeShort(errorCode.getCode());
         buf.writeInt(partitionIndex);
         buf.writeInt(leaderId);
         buf.writeInt(leaderEpoch);

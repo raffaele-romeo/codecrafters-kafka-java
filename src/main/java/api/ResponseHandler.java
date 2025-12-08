@@ -1,12 +1,12 @@
 package api;
 
-import api.apiversions.ApiVersionsHandler;
-import api.describetopicpartitions.DescribeTopicPartitionsHandler;
-import api.describetopicpartitions.DescribeTopicPartitionsRequestBody;
-import model.ApiKey;
-import model.Request;
+import model.RequestContext;
+import model.Response;
 
-public class ApiResponseHandler {
+public abstract class ResponseHandler<REQ extends RequestBody, RES extends Response>  {
+    protected abstract RES handle(RequestContext requestContext, REQ requestBody);
+}
+    /*
     public static ResponseBody handle(Request request) {
         return switch (ApiKey.from(request.getHeader().getApiKey())) {
             case API_VERSIONS -> ApiVersionsHandler.handle(request.getHeader().getApiVersion());
@@ -14,4 +14,4 @@ public class ApiResponseHandler {
                     DescribeTopicPartitionsHandler.handle((DescribeTopicPartitionsRequestBody) request.getBody());
         };
     }
-}
+     */

@@ -6,6 +6,10 @@ import nettycodec.ResponseEncoder;
 
 
 public class BrokerInitializer extends ChannelInitializer<SocketChannel> {
+
+    //TODO Instantiate the APIRegistry
+
+
     @Override
     protected void initChannel(SocketChannel channel) {
         ChannelPipeline pipeline = channel.pipeline();
