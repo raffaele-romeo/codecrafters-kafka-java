@@ -4,12 +4,12 @@ import io.netty.buffer.ByteBuf;
 import protocol.NullableString;
 
 public class RequestHeader {
-    private final short apiKey;
+    private final ApiKey apiKey;
     private final short apiVersion;
     private final int correlationId;
     private final String clientId;
 
-    private RequestHeader(short apiKey, short apiVersion, int correlationId, String clientId) {
+    private RequestHeader(ApiKey apiKey, short apiVersion, int correlationId, String clientId) {
         this.apiKey = apiKey;
         this.apiVersion = apiVersion;
         this.correlationId = correlationId;
@@ -23,10 +23,10 @@ public class RequestHeader {
         var clientId = NullableString.read(buf);
         buf.readByte(); // Tag buffer - discarded for now
 
-        return new RequestHeader(apiKey, apiVersion, correlationId, clientId);
+        return new RequestHeader(ApiKey.from(apiKey), apiVersion, correlationId, clientId);
     }
 
-    public short getApiKey() {
+    public ApiKey getApiKey() {
         return apiKey;
     }
 

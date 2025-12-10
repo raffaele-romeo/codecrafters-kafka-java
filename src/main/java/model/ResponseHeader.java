@@ -9,5 +9,5 @@ public abstract class ResponseHeader {
         this.correlationId = correlationId;
     }
 
-    public abstract ByteBuf serialize();
+    public abstract void write(ByteBuf output);
 }

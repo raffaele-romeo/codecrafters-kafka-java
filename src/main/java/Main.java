@@ -5,7 +5,6 @@ public class Main {
         int port = 9092;
         var kafkaServer = new Server(port);
 
-
         try {
             kafkaServer.run();
         } catch (Exception e) {

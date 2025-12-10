@@ -1,4 +1,4 @@
-package model;
+package model.acl;
 
 import java.util.HashMap;
 import java.util.Locale;

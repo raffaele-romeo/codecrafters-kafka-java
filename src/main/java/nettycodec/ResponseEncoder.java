@@ -3,14 +3,14 @@ package nettycodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-import model.Response;
+import api.common.AbstractResponse;
 
 public class ResponseEncoder
-        extends MessageToByteEncoder<Response> {
+        extends MessageToByteEncoder<AbstractResponse> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx,
-                          Response response, ByteBuf out) {
+                          AbstractResponse response, ByteBuf out) {
         ByteBuf responseBytes = null;
 
         try {

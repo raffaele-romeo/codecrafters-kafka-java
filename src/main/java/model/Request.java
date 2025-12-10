@@ -1,34 +1,33 @@
 package model;
 
-import api.ApiRequestBodyParser;
-import api.RequestBody;
+import api.common.AbstractRequest;
 import io.netty.buffer.ByteBuf;
 
 public class Request {
     private final int messageSize;
     private final RequestHeader header;
-    private final RequestBody body;
+    private final AbstractRequest request;
 
-    private Request(int messageSize, RequestHeader header, RequestBody body) {
+    private Request(int messageSize, RequestHeader header, AbstractRequest request) {
         this.messageSize = messageSize;
         this.header = header;
-        this.body = body;
+        this.request = request;
     }
 
-    public static Request parse(int messageSize, ByteBuf in) {
-        var requestHeader = RequestHeader.parse(in);
+    public static Request parse(int messageSize, ByteBuf input) {
+        var requestHeader = RequestHeader.parse(input);
         System.out.println(requestHeader);
-        var requestBody = ApiRequestBodyParser.parse(requestHeader.getApiKey(), in);
+        var request = AbstractRequest.parseRequest(requestHeader.getApiKey(), input);
 
-        return new Request(messageSize, requestHeader, requestBody);
+        return new Request(messageSize, requestHeader, request);
     }
 
     public RequestHeader getHeader() {
         return header;
     }
 
-    public RequestBody getBody() {
-        return body;
+    public AbstractRequest getBody() {
+        return request;
     }
 
     @Override
@@ -36,7 +35,7 @@ public class Request {
         return "Request{" +
                 "messageSize=" + messageSize +
                 ", header=" + header.toString() +
-                ", body=" + body.toString() +
+                ", request=" + request.toString() +
                 '}';
     }
 }

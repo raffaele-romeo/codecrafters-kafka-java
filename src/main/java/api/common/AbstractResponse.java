@@ -1,33 +1,25 @@
-package model;
+package api.common;
 
-import api.ResponseBody;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import model.ResponseHeader;
 
-public class Response {
+public abstract class AbstractResponse {
     protected final ResponseHeader header;
-    protected final ResponseBody body;
+    protected final ApiResponseMessage message;
 
-    protected Response(ResponseHeader header, ResponseBody body) {
+    protected AbstractResponse(ResponseHeader header, ApiResponseMessage message) {
         this.header = header;
-        this.body = body;
+        this.message = message;
     }
 
-//    public static Response handle(Request request) {
-//        var requestHeader = request.getHeader();
-//        var responseHeader = new ResponseHeaderV0(requestHeader.getCorrelationId());
-//        var responseBody = ApiResponseHandler.handle(request);
-//
-//        return new Response(responseHeader, responseBody);
-//    }
-
     public ByteBuf serialize() {
-        ByteBuf headerBuf = null;
-        ByteBuf bodyBuf = null;
+        ByteBuf headerBuf = Unpooled.buffer();
+        ByteBuf bodyBuf = Unpooled.buffer();
 
         try {
-            headerBuf = header.serialize();
-            bodyBuf = body.serialize();
+            header.write(headerBuf);
+            message.write(bodyBuf);
 
             int totalSize = headerBuf.readableBytes() + bodyBuf.readableBytes();
 
@@ -46,7 +38,7 @@ public class Response {
     public String toString() {
         return "Response{" +
                 "header=" + header.toString() +
-                ", body=" + body.toString() +
+                ", message=" + message.toString() +
                 '}';
     }
 }

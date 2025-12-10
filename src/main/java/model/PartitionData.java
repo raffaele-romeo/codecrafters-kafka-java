@@ -16,7 +16,7 @@ public record PartitionData(
         List<Integer> eligibleLeaderReplicas,
         List<Integer> lastKnownElr,
         List<Integer> offlineReplicas,
-        RawTaggedField taggedFields
+        RawTaggedField taggedField
 ) {
     public void write(ByteBuf buf) {
         buf.writeShort(errorCode.getCode());
@@ -28,6 +28,6 @@ public record PartitionData(
         CompactArray.write(buf, eligibleLeaderReplicas, ByteBuf::writeInt);
         CompactArray.write(buf, lastKnownElr, ByteBuf::writeInt);
         CompactArray.write(buf, offlineReplicas, ByteBuf::writeInt);
-        taggedFields.write(buf);
+        taggedField.write(buf);
     }
 }

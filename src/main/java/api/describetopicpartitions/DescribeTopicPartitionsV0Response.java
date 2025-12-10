@@ -1,10 +1,10 @@
 package api.describetopicpartitions;
 
-import model.Response;
+import api.common.AbstractResponse;
 import model.ResponseHeaderV1;
 
-public class DescribeTopicPartitionsV0Response extends Response {
-    public DescribeTopicPartitionsV0Response(ResponseHeaderV1 header, DescribeTopicPartitionsV0ResponseBody body) {
+public class DescribeTopicPartitionsV0Response extends AbstractResponse {
+    public DescribeTopicPartitionsV0Response(ResponseHeaderV1 header, DescribeTopicPartitionsV0ResponseData body) {
         super(header, body);
     }
 }

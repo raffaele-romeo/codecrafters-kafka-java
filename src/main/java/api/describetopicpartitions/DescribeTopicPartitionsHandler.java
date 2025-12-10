@@ -1,18 +1,19 @@
 package api.describetopicpartitions;
 
-import api.ResponseHandler;
+import api.common.RequestHandler;
 import model.*;
+import model.acl.AclOperation;
 import protocol.RawTaggedField;
 import protocol.RawTaggedFields;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-final public class DescribeTopicPartitionsHandler extends ResponseHandler<DescribeTopicPartitionsRequestBody, DescribeTopicPartitionsV0Response> {
+final public class DescribeTopicPartitionsHandler extends RequestHandler<DescribeTopicPartitionsRequest, DescribeTopicPartitionsV0Response> {
     @Override
-    public DescribeTopicPartitionsV0Response handle(RequestContext requestContext, DescribeTopicPartitionsRequestBody request) {
+    public DescribeTopicPartitionsV0Response handle(RequestContext requestContext, DescribeTopicPartitionsRequest request) {
 
-        var topicResponse = request.topicRequests().stream().map(topicRequest -> new TopicResponse(
+        var topicResponse = request.getData().getTopicRequests().stream().map(topicRequest -> new TopicResponse(
                         ErrorCode.UNKNOWN_TOPIC_OR_PARTITION,
                         topicRequest.name(),
                         UUID.fromString("00000000-0000-0000-0000-000000000000"),
@@ -23,10 +24,10 @@ final public class DescribeTopicPartitionsHandler extends ResponseHandler<Descri
                 )
         ).toList();
 
-        var responseBody = new DescribeTopicPartitionsV0ResponseBody(
+        var responseBody = new DescribeTopicPartitionsV0ResponseData(
                 0,
-                topicResponse, (byte) -1, RawTaggedFields.empty());
+                topicResponse, (byte) -1, RawTaggedField.empty());
 
-        return new DescribeTopicPartitionsV0Response(new ResponseHeaderV1(requestContext.correlationId(), RawTaggedFields.empty()), responseBody);
+        return new DescribeTopicPartitionsV0Response(new ResponseHeaderV1(requestContext.correlationId(), RawTaggedField.empty()), responseBody);
     }
 }

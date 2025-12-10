@@ -1,6 +1,7 @@
 package model;
 
 import io.netty.buffer.ByteBuf;
+import model.acl.AclOperation;
 import protocol.*;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public record TopicResponse(
         boolean isInternal,
         List<PartitionData> partitions,
         AclOperation authorizedOperations,
-        RawTaggedField taggedFields
+        RawTaggedField taggedField
 ) {
     public void write(ByteBuf buf) {
         buf.writeShort(errorCode.getCode());
