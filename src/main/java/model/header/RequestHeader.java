@@ -3,6 +3,7 @@ package model.header;
 import io.netty.buffer.ByteBuf;
 import model.ApiKey;
 import protocol.NullableString;
+import protocol.RawTaggedFields;
 
 public class RequestHeader {
     private final ApiKey apiKey;
@@ -10,7 +11,7 @@ public class RequestHeader {
     private final int correlationId;
     private final String clientId;
 
-    private RequestHeader(ApiKey apiKey, short apiVersion, int correlationId, String clientId) {
+    private RequestHeader(ApiKey apiKey, short apiVersion, int correlationId, String clientId, RawTaggedFields taggedFields) {
         this.apiKey = apiKey;
         this.apiVersion = apiVersion;
         this.correlationId = correlationId;
@@ -22,9 +23,9 @@ public class RequestHeader {
         var apiVersion = buf.readShort();
         var correlationId = buf.readInt();
         var clientId = NullableString.read(buf);
-        buf.readByte(); //TODO Handle TAG_BUFFER
+        var taggedFields = RawTaggedFields.read(buf);
 
-        return new RequestHeader(ApiKey.from(apiKey), apiVersion, correlationId, clientId);
+        return new RequestHeader(ApiKey.from(apiKey), apiVersion, correlationId, clientId, taggedFields);
     }
 
     public ApiKey getApiKey() {

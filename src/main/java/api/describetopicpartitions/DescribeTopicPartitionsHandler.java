@@ -26,7 +26,7 @@ final public class DescribeTopicPartitionsHandler extends RequestHandler<Describ
 
         var data = new DescribeTopicPartitionsV0ResponseData(
                 0,
-                topicResponse, (byte) -1);
+                topicResponse, (byte) -1, RawTaggedFields.empty());
 
         return new DescribeTopicPartitionsV0Response(new ResponseHeaderV1(requestContext.correlationId(), RawTaggedFields.empty()), data);
     }
