@@ -22,7 +22,7 @@ public class RequestHeader {
         var apiVersion = buf.readShort();
         var correlationId = buf.readInt();
         var clientId = NullableString.read(buf);
-        buf.readByte(); // Tag buffer - discarded for now
+        buf.readByte(); //TODO Handle TAG_BUFFER
 
         return new RequestHeader(ApiKey.from(apiKey), apiVersion, correlationId, clientId);
     }

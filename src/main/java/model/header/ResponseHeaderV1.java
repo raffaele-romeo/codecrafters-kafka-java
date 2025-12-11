@@ -1,18 +1,19 @@
 package model.header;
 
 import io.netty.buffer.ByteBuf;
-import protocol.UnsignedVarInt;
+import protocol.RawTaggedFields;
 
 public class ResponseHeaderV1 extends ResponseHeader {
-
-    public ResponseHeaderV1(int correlationId) {
+    RawTaggedFields taggedFields;
+    public ResponseHeaderV1(int correlationId, RawTaggedFields taggedFields) {
         super(correlationId);
+        this.taggedFields = taggedFields;
     }
 
     @Override
     public void write(ByteBuf output) {
         output.writeInt(correlationId);
-        UnsignedVarInt.write(output, 0);  // TAG_BUFFER
+        taggedFields.write(output);
     }
 
     @Override

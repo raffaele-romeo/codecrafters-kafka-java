@@ -27,6 +27,6 @@ public record PartitionData(
         CompactArray.write(output, eligibleLeaderReplicas, ByteBuf::writeInt);
         CompactArray.write(output, lastKnownElr, ByteBuf::writeInt);
         CompactArray.write(output, offlineReplicas, ByteBuf::writeInt);
-        UnsignedVarInt.write(output, 0);  // TAG_BUFFER
+        UnsignedVarInt.write(output, 0);  //TODO Handle TAG_BUFFER
     }
 }

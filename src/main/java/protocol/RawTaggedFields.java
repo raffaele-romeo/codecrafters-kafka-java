@@ -8,7 +8,7 @@ import java.util.Map;
 public class RawTaggedFields {
     private final Map<Integer, RawTaggedField> fields;
 
-    public RawTaggedFields(Map<Integer, RawTaggedField> fields) {
+    private RawTaggedFields(Map<Integer, RawTaggedField> fields) {
         this.fields = fields;
     }
 
@@ -26,6 +26,17 @@ public class RawTaggedFields {
         }
 
         return new RawTaggedFields(fields);
+    }
+
+    public void write(ByteBuf output) {
+        if (fields.isEmpty()) {
+            UnsignedVarInt.write(output, 0);
+            return;
+        }
+
+        for (RawTaggedField field : fields.values().stream().toList()) {
+            field.write(output);
+        }
     }
 
     public static RawTaggedFields empty() {

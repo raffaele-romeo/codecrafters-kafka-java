@@ -23,6 +23,6 @@ public record TopicResponse(
         CompactArray.write(output, partitions,
                 (suppliedBuf, value) -> value.write(suppliedBuf));
         authorizedOperations.write(output);
-        UnsignedVarInt.write(output, 0);  // TAG_BUFFER
+        UnsignedVarInt.write(output, 0);  //TODO Handle TAG_BUFFER
     }
 }

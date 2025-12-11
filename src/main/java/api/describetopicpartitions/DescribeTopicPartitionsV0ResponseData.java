@@ -18,6 +18,6 @@ public record DescribeTopicPartitionsV0ResponseData(int throttleTime,
         output.writeInt(throttleTime);
         CompactArray.write(output, topicResponses, (suppliedBuf, topicResponse) -> topicResponse.write(suppliedBuf));
         output.writeByte(nextCursor);
-        UnsignedVarInt.write(output, 0);  // TAG_BUFFER
+        UnsignedVarInt.write(output, 0);  //TODO Handle TAG_BUFFER
     }
 }

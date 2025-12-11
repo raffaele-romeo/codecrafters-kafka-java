@@ -18,7 +18,7 @@ public record ApiResponseVersionsResponseData(ErrorCode errorCode, List<ApiKey> 
         CompactArray.write(output, apiKeys, (buf, apiKey) -> apiKey.write(buf));
 
         output.writeInt(throttleTimeMs);
-        UnsignedVarInt.write(output, 0);  // TAG_BUFFER
+        UnsignedVarInt.write(output, 0);  //TODO Handle TAG_BUFFER
     }
 
     @Override

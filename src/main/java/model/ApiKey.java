@@ -28,7 +28,7 @@ public enum ApiKey {
         output.writeShort(key);
         output.writeShort(minSupportedApiVersion);
         output.writeShort(maxSupportedApiVersion);
-        UnsignedVarInt.write(output, 0); // TAG_BUFFER
+        UnsignedVarInt.write(output, 0); //TODO Handle TAG_BUFFER
     }
 
     public short getKey() {
