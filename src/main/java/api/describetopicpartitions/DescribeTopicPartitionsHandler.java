@@ -5,6 +5,7 @@ import model.*;
 import model.acl.AclOperation;
 import model.header.RequestContext;
 import model.header.ResponseHeaderV1;
+import protocol.RawTaggedFields;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -27,6 +28,6 @@ final public class DescribeTopicPartitionsHandler extends RequestHandler<Describ
                 0,
                 topicResponse, (byte) -1);
 
-        return new DescribeTopicPartitionsV0Response(new ResponseHeaderV1(requestContext.correlationId()), data);
+        return new DescribeTopicPartitionsV0Response(new ResponseHeaderV1(requestContext.correlationId(), RawTaggedFields.empty()), data);
     }
 }
