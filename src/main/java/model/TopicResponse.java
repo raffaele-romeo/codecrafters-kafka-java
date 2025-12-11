@@ -16,13 +16,13 @@ public record TopicResponse(
         AclOperation authorizedOperations
 ) {
     public void write(ByteBuf output) {
-        output.writeShort(errorCode.getCode());
+        errorCode.write(output);
         CompactString.write(output, name);
         UUIDOps.writeUuid(output, topicId);
         output.writeBoolean(isInternal);
         CompactArray.write(output, partitions,
                 (suppliedBuf, value) -> value.write(suppliedBuf));
-        output.writeInt(authorizedOperations.code());
+        authorizedOperations.write(output);
         UnsignedVarInt.write(output, 0);  // TAG_BUFFER
     }
 }

@@ -2,13 +2,13 @@ package api.apiversions;
 
 import api.common.ApiRequestMessage;
 import io.netty.buffer.ByteBuf;
-import protocol.RawTaggedField;
+import protocol.RawTaggedFields;
 import protocol.CompactString;
 
 public class ApiResponseVersionsRequestData implements ApiRequestMessage {
     String clientSoftwareName;
     String clientSoftwareVersion;
-    RawTaggedField taggedField;
+    RawTaggedFields taggedFields;
 
     public ApiResponseVersionsRequestData(ByteBuf input) {
         this.read(input);
@@ -17,7 +17,7 @@ public class ApiResponseVersionsRequestData implements ApiRequestMessage {
     public final void read(ByteBuf input) {
         this.clientSoftwareName = CompactString.read(input);
         this.clientSoftwareVersion = CompactString.read(input);
-        this.taggedField = RawTaggedField.read(input);
+        this.taggedFields = RawTaggedFields.read(input);
     }
 
 
@@ -26,7 +26,7 @@ public class ApiResponseVersionsRequestData implements ApiRequestMessage {
         return "ApiVersionRequestBody{" +
                 "clientSoftwareName='" + clientSoftwareName + '\'' +
                 ", clientSoftwareVersion='" + clientSoftwareVersion + '\'' +
-                ", taggedField=" + taggedField +
+                ", taggedField=" + taggedFields +
                 '}';
     }
 }

@@ -5,7 +5,6 @@ import model.*;
 import model.acl.AclOperation;
 import model.header.RequestContext;
 import model.header.ResponseHeaderV1;
-import protocol.RawTaggedField;
 
 import java.util.ArrayList;
 import java.util.UUID;

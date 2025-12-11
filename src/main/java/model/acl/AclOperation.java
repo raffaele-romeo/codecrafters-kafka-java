@@ -1,5 +1,7 @@
 package model.acl;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -94,9 +96,8 @@ public enum AclOperation {
     /**
      * Parse the given string as an ACL operation.
      *
-     * @param str    The string to parse.
-     *
-     * @return       The AclOperation, or UNKNOWN if the string could not be matched.
+     * @param str The string to parse.
+     * @return The AclOperation, or UNKNOWN if the string could not be matched.
      */
     public static AclOperation fromString(String str) throws IllegalArgumentException {
         try {
@@ -135,5 +136,9 @@ public enum AclOperation {
      */
     public boolean isUnknown() {
         return this == UNKNOWN;
+    }
+
+    public void write(ByteBuf output) {
+        output.writeInt(this.code);
     }
 }

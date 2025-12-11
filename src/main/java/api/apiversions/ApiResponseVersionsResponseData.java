@@ -4,22 +4,18 @@ import api.common.ApiResponseMessage;
 import io.netty.buffer.ByteBuf;
 import model.ApiKey;
 import model.ErrorCode;
+import protocol.CompactArray;
 import protocol.UnsignedVarInt;
 
-import java.util.Arrays;
+import java.util.List;
 
-public record ApiResponseVersionsResponseData(ErrorCode errorCode, ApiKey[] apiKeys,
+public record ApiResponseVersionsResponseData(ErrorCode errorCode, List<ApiKey> apiKeys,
                                               int throttleTimeMs) implements ApiResponseMessage {
 
     @Override
     public void write(ByteBuf output) {
-        output.writeShort(errorCode.getCode());
-        int apiKeysLength = apiKeys.length;
-        UnsignedVarInt.write(output, apiKeysLength + 1);
-
-        for (ApiKey apiKey : this.apiKeys) {
-            output.writeBytes(apiKey.serialize());
-        }
+        errorCode.write(output);
+        CompactArray.write(output, apiKeys, (buf, apiKey) -> apiKey.write(buf));
 
         output.writeInt(throttleTimeMs);
         UnsignedVarInt.write(output, 0);  // TAG_BUFFER
@@ -27,9 +23,9 @@ public record ApiResponseVersionsResponseData(ErrorCode errorCode, ApiKey[] apiK
 
     @Override
     public String toString() {
-        return "ApiResponseVersionData{" +
+        return "ApiResponseVersionsResponseData{" +
                 "errorCode=" + errorCode +
-                ", apiKeys=" + Arrays.toString(apiKeys) +
+                ", apiKeys=" + apiKeys +
                 ", throttleTimeMs=" + throttleTimeMs +
                 '}';
     }

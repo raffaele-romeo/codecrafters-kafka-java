@@ -18,7 +18,7 @@ public record PartitionData(
         List<Integer> offlineReplicas
 ) {
     public void write(ByteBuf output) {
-        output.writeShort(errorCode.getCode());
+        errorCode.write(output);
         output.writeInt(partitionIndex);
         output.writeInt(leaderId);
         output.writeInt(leaderEpoch);

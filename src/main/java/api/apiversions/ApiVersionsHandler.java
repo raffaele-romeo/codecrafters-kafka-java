@@ -6,14 +6,17 @@ import model.ErrorCode;
 import model.header.RequestContext;
 import model.header.ResponseHeaderV0;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 final public class ApiVersionsHandler extends RequestHandler<ApiVersionsRequest, ApiVersionsResponse> {
     @Override
     public ApiVersionsResponse handle(RequestContext requestContext, ApiVersionsRequest request) {
         ApiResponseVersionsResponseData apiResponseVersion;
         if (requestContext.apiVersion() != 4) {
-            apiResponseVersion = new ApiResponseVersionsResponseData(ErrorCode.UNSUPPORTED_VERSION, new ApiKey[]{}, 0);
+            apiResponseVersion = new ApiResponseVersionsResponseData(ErrorCode.UNSUPPORTED_VERSION, new ArrayList<>(), 0);
         } else {
-            apiResponseVersion = new ApiResponseVersionsResponseData(ErrorCode.NONE, ApiKey.values(), 0);
+            apiResponseVersion = new ApiResponseVersionsResponseData(ErrorCode.NONE, Arrays.stream(ApiKey.values()).toList(), 0);
         }
 
         return new ApiVersionsResponse(new ResponseHeaderV0(requestContext.correlationId()), apiResponseVersion);

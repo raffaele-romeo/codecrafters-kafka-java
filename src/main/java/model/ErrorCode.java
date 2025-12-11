@@ -1,5 +1,7 @@
 package model;
 
+import io.netty.buffer.ByteBuf;
+
 public enum ErrorCode {
     UNSUPPORTED_VERSION(35, false),
     NONE(0, false),
@@ -13,7 +15,13 @@ public enum ErrorCode {
         this.retriable = retriable;
     }
 
+    public void write(ByteBuf output) {
+        output.writeShort(this.code);
+    }
+
     public short getCode() {
         return code;
     }
+
+
 }

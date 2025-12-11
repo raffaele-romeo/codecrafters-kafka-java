@@ -1,7 +1,6 @@
 package model;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import protocol.UnsignedVarInt;
 
 import java.util.Arrays;
@@ -25,19 +24,11 @@ public enum ApiKey {
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Api Key %s is undefined".formatted(apiKey)));
     }
 
-    public ByteBuf serialize() {
-        var result = Unpooled.buffer();
-        try {
-            result.writeShort(key);
-            result.writeShort(minSupportedApiVersion);
-            result.writeShort(maxSupportedApiVersion);
-            UnsignedVarInt.write(result, 0); // TAG_BUFFER
-
-            return result;
-        } catch (Exception e) {
-            result.release();
-            throw e;
-        }
+    public void write(ByteBuf output) {
+        output.writeShort(key);
+        output.writeShort(minSupportedApiVersion);
+        output.writeShort(maxSupportedApiVersion);
+        UnsignedVarInt.write(output, 0); // TAG_BUFFER
     }
 
     public short getKey() {
