@@ -2,6 +2,7 @@ package model;
 
 import io.netty.buffer.ByteBuf;
 import protocol.CompactArray;
+import protocol.RawTaggedFields;
 import protocol.UnsignedVarInt;
 
 import java.util.List;
@@ -15,7 +16,8 @@ public record PartitionData(
         List<Integer> isrNodes,
         List<Integer> eligibleLeaderReplicas,
         List<Integer> lastKnownElr,
-        List<Integer> offlineReplicas
+        List<Integer> offlineReplicas,
+        RawTaggedFields taggedFields
 ) {
     public void write(ByteBuf output) {
         errorCode.write(output);
@@ -27,6 +29,6 @@ public record PartitionData(
         CompactArray.write(output, eligibleLeaderReplicas, ByteBuf::writeInt);
         CompactArray.write(output, lastKnownElr, ByteBuf::writeInt);
         CompactArray.write(output, offlineReplicas, ByteBuf::writeInt);
-        UnsignedVarInt.write(output, 0);  //TODO Handle TAG_BUFFER
+        taggedFields.write(output);
     }
 }

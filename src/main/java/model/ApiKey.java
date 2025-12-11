@@ -1,7 +1,7 @@
 package model;
 
 import io.netty.buffer.ByteBuf;
-import protocol.UnsignedVarInt;
+import protocol.RawTaggedFields;
 
 import java.util.Arrays;
 
@@ -28,7 +28,7 @@ public enum ApiKey {
         output.writeShort(key);
         output.writeShort(minSupportedApiVersion);
         output.writeShort(maxSupportedApiVersion);
-        UnsignedVarInt.write(output, 0); //TODO Handle TAG_BUFFER
+        RawTaggedFields.empty().write(output);
     }
 
     public short getKey() {

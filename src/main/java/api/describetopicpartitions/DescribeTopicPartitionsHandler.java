@@ -20,7 +20,8 @@ final public class DescribeTopicPartitionsHandler extends RequestHandler<Describ
                         UUID.fromString("00000000-0000-0000-0000-000000000000"),
                         false,
                         new ArrayList<>(),
-                        AclOperation.UNKNOWN
+                        AclOperation.UNKNOWN,
+                        RawTaggedFields.empty()
                 )
         ).toList();
 

@@ -13,7 +13,8 @@ public record TopicResponse(
         UUID topicId,
         boolean isInternal,
         List<PartitionData> partitions,
-        AclOperation authorizedOperations
+        AclOperation authorizedOperations,
+        RawTaggedFields taggedFields
 ) {
     public void write(ByteBuf output) {
         errorCode.write(output);
@@ -23,6 +24,6 @@ public record TopicResponse(
         CompactArray.write(output, partitions,
                 (suppliedBuf, value) -> value.write(suppliedBuf));
         authorizedOperations.write(output);
-        UnsignedVarInt.write(output, 0);  //TODO Handle TAG_BUFFER
+        taggedFields.write(output);
     }
 }
