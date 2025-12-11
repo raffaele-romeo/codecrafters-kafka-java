@@ -21,4 +21,10 @@ public class ApiVersionsRequest extends AbstractRequest {
     }
 
 
+    @Override
+    public String toString() {
+        return "ApiVersionsRequest{" +
+                "data=" + data +
+                '}';
+    }
 }

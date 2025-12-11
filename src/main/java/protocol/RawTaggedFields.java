@@ -29,15 +29,14 @@ public class RawTaggedFields {
         return new RawTaggedFields(fields);
     }
 
-    public void write(ByteBuf buf) {
-        UnsignedVarInt.write(buf, fields.size());
-
-        fields.values().stream()
-                .sorted(Comparator.comparingInt(RawTaggedField::getTag))
-                .forEach(field -> field.write(buf));
-    }
-
     public static RawTaggedFields empty() {
         return new RawTaggedFields(Map.of());
+    }
+
+    @Override
+    public String toString() {
+        return "RawTaggedFields{" +
+                "fields=" + fields +
+                '}';
     }
 }

@@ -2,6 +2,7 @@ package model;
 
 import api.common.AbstractRequest;
 import io.netty.buffer.ByteBuf;
+import model.header.RequestHeader;
 
 public class Request {
     private final int messageSize;

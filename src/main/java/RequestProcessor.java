@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import model.Request;
-import model.RequestContext;
+import model.header.RequestContext;
 
 public class RequestProcessor extends ChannelInboundHandlerAdapter {
     private final ApiRegistry apiRegistry;

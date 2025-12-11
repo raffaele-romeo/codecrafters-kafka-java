@@ -3,12 +3,12 @@ package api.apiversions;
 import api.common.RequestHandler;
 import model.ApiKey;
 import model.ErrorCode;
-import model.RequestContext;
-import model.ResponseHeaderV0;
+import model.header.RequestContext;
+import model.header.ResponseHeaderV0;
 
-final public class ApiVersionsHandler extends RequestHandler<ApiVersionsRequest, ApiVersionsAbstractResponse> {
+final public class ApiVersionsHandler extends RequestHandler<ApiVersionsRequest, ApiVersionsResponse> {
     @Override
-    public ApiVersionsAbstractResponse handle(RequestContext requestContext, ApiVersionsRequest request) {
+    public ApiVersionsResponse handle(RequestContext requestContext, ApiVersionsRequest request) {
         ApiResponseVersionsResponseData apiResponseVersion;
         if (requestContext.apiVersion() != 4) {
             apiResponseVersion = new ApiResponseVersionsResponseData(ErrorCode.UNSUPPORTED_VERSION, new ApiKey[]{}, 0);
@@ -16,6 +16,6 @@ final public class ApiVersionsHandler extends RequestHandler<ApiVersionsRequest,
             apiResponseVersion = new ApiResponseVersionsResponseData(ErrorCode.NONE, ApiKey.values(), 0);
         }
 
-        return new ApiVersionsAbstractResponse(new ResponseHeaderV0(requestContext.correlationId()), apiResponseVersion);
+        return new ApiVersionsResponse(new ResponseHeaderV0(requestContext.correlationId()), apiResponseVersion);
     }
 }

@@ -1,6 +1,7 @@
-package model;
+package model.header;
 
 import io.netty.buffer.ByteBuf;
+import model.ApiKey;
 import protocol.NullableString;
 
 public class RequestHeader {

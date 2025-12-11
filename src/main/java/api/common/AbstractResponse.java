@@ -2,7 +2,7 @@ package api.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import model.ResponseHeader;
+import model.header.ResponseHeader;
 
 public abstract class AbstractResponse {
     protected final ResponseHeader header;

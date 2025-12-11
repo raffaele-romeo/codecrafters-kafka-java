@@ -4,14 +4,13 @@ import api.common.ApiResponseMessage;
 import io.netty.buffer.ByteBuf;
 import model.TopicResponse;
 import protocol.CompactArray;
-import protocol.RawTaggedField;
+import protocol.UnsignedVarInt;
 
 import java.util.List;
 
 public record DescribeTopicPartitionsV0ResponseData(int throttleTime,
                                                     List<TopicResponse> topicResponses,
-                                                    byte nextCursor,
-                                                    RawTaggedField taggedField)
+                                                    byte nextCursor)
         implements ApiResponseMessage {
 
     @Override
@@ -19,6 +18,6 @@ public record DescribeTopicPartitionsV0ResponseData(int throttleTime,
         output.writeInt(throttleTime);
         CompactArray.write(output, topicResponses, (suppliedBuf, topicResponse) -> topicResponse.write(suppliedBuf));
         output.writeByte(nextCursor);
-        taggedField.write(output);
+        UnsignedVarInt.write(output, 0);  // TAG_BUFFER
     }
 }

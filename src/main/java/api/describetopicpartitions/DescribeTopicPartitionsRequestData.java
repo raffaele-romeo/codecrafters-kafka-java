@@ -4,7 +4,6 @@ import api.common.ApiRequestMessage;
 import io.netty.buffer.ByteBuf;
 import model.TopicRequest;
 import protocol.CompactArray;
-import protocol.RawTaggedField;
 import protocol.RawTaggedFields;
 
 import java.util.List;
@@ -42,4 +41,13 @@ public class DescribeTopicPartitionsRequestData implements ApiRequestMessage {
         return topicRequests;
     }
 
+    @Override
+    public String toString() {
+        return "DescribeTopicPartitionsRequestData{" +
+                "topicRequests=" + topicRequests +
+                ", numberOfPartitions=" + numberOfPartitions +
+                ", cursor=" + cursor +
+                ", taggedFields=" + taggedFields +
+                '}';
+    }
 }

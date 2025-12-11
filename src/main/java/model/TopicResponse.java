@@ -13,17 +13,16 @@ public record TopicResponse(
         UUID topicId,
         boolean isInternal,
         List<PartitionData> partitions,
-        AclOperation authorizedOperations,
-        RawTaggedField taggedField
+        AclOperation authorizedOperations
 ) {
-    public void write(ByteBuf buf) {
-        buf.writeShort(errorCode.getCode());
-        CompactString.write(buf, name);
-        UUIDOps.writeUuid(buf, topicId);
-        buf.writeBoolean(isInternal);
-        CompactArray.write(buf, partitions,
+    public void write(ByteBuf output) {
+        output.writeShort(errorCode.getCode());
+        CompactString.write(output, name);
+        UUIDOps.writeUuid(output, topicId);
+        output.writeBoolean(isInternal);
+        CompactArray.write(output, partitions,
                 (suppliedBuf, value) -> value.write(suppliedBuf));
-        buf.writeByte(authorizedOperations.code());
-        buf.writeByte(0);
+        output.writeInt(authorizedOperations.code());
+        UnsignedVarInt.write(output, 0);  // TAG_BUFFER
     }
 }

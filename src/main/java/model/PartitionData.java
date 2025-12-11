@@ -2,7 +2,7 @@ package model;
 
 import io.netty.buffer.ByteBuf;
 import protocol.CompactArray;
-import protocol.RawTaggedField;
+import protocol.UnsignedVarInt;
 
 import java.util.List;
 
@@ -15,19 +15,18 @@ public record PartitionData(
         List<Integer> isrNodes,
         List<Integer> eligibleLeaderReplicas,
         List<Integer> lastKnownElr,
-        List<Integer> offlineReplicas,
-        RawTaggedField taggedField
+        List<Integer> offlineReplicas
 ) {
-    public void write(ByteBuf buf) {
-        buf.writeShort(errorCode.getCode());
-        buf.writeInt(partitionIndex);
-        buf.writeInt(leaderId);
-        buf.writeInt(leaderEpoch);
-        CompactArray.write(buf, replicaNodes, ByteBuf::writeInt);
-        CompactArray.write(buf, isrNodes, ByteBuf::writeInt);
-        CompactArray.write(buf, eligibleLeaderReplicas, ByteBuf::writeInt);
-        CompactArray.write(buf, lastKnownElr, ByteBuf::writeInt);
-        CompactArray.write(buf, offlineReplicas, ByteBuf::writeInt);
-        taggedField.write(buf);
+    public void write(ByteBuf output) {
+        output.writeShort(errorCode.getCode());
+        output.writeInt(partitionIndex);
+        output.writeInt(leaderId);
+        output.writeInt(leaderEpoch);
+        CompactArray.write(output, replicaNodes, ByteBuf::writeInt);
+        CompactArray.write(output, isrNodes, ByteBuf::writeInt);
+        CompactArray.write(output, eligibleLeaderReplicas, ByteBuf::writeInt);
+        CompactArray.write(output, lastKnownElr, ByteBuf::writeInt);
+        CompactArray.write(output, offlineReplicas, ByteBuf::writeInt);
+        UnsignedVarInt.write(output, 0);  // TAG_BUFFER
     }
 }

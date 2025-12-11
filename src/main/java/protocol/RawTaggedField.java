@@ -28,11 +28,6 @@ public class RawTaggedField {
         return new RawTaggedField(tag, data);
     }
 
-    public void write(ByteBuf byteBuf) {
-        UnsignedVarInt.write(byteBuf, tag);
-        UnsignedVarInt.write(byteBuf, data.readableBytes());
-        byteBuf.writeBytes(data);
-    }
 
     @Override
     public String toString() {

@@ -3,8 +3,9 @@ package api.describetopicpartitions;
 import api.common.RequestHandler;
 import model.*;
 import model.acl.AclOperation;
+import model.header.RequestContext;
+import model.header.ResponseHeaderV1;
 import protocol.RawTaggedField;
-import protocol.RawTaggedFields;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -19,15 +20,14 @@ final public class DescribeTopicPartitionsHandler extends RequestHandler<Describ
                         UUID.fromString("00000000-0000-0000-0000-000000000000"),
                         false,
                         new ArrayList<>(),
-                        AclOperation.UNKNOWN,
-                        RawTaggedField.empty()
+                        AclOperation.UNKNOWN
                 )
         ).toList();
 
-        var responseBody = new DescribeTopicPartitionsV0ResponseData(
+        var data = new DescribeTopicPartitionsV0ResponseData(
                 0,
-                topicResponse, (byte) -1, RawTaggedField.empty());
+                topicResponse, (byte) -1);
 
-        return new DescribeTopicPartitionsV0Response(new ResponseHeaderV1(requestContext.correlationId(), RawTaggedField.empty()), responseBody);
+        return new DescribeTopicPartitionsV0Response(new ResponseHeaderV1(requestContext.correlationId()), data);
     }
 }

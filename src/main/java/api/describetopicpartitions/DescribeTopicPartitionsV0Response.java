@@ -1,7 +1,7 @@
 package api.describetopicpartitions;
 
 import api.common.AbstractResponse;
-import model.ResponseHeaderV1;
+import model.header.ResponseHeaderV1;
 
 public class DescribeTopicPartitionsV0Response extends AbstractResponse {
     public DescribeTopicPartitionsV0Response(ResponseHeaderV1 header, DescribeTopicPartitionsV0ResponseData body) {

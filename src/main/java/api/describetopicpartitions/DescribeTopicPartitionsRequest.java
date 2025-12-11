@@ -21,4 +21,10 @@ public class DescribeTopicPartitionsRequest extends AbstractRequest {
     }
 
 
+    @Override
+    public String toString() {
+        return "DescribeTopicPartitionsRequest{" +
+                "data=" + data +
+                '}';
+    }
 }

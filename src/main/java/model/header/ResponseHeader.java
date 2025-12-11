@@ -1,4 +1,4 @@
-package model;
+package model.header;
 
 import io.netty.buffer.ByteBuf;
 
