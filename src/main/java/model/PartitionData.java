@@ -3,7 +3,6 @@ package model;
 import io.netty.buffer.ByteBuf;
 import protocol.CompactArray;
 import protocol.RawTaggedFields;
-import protocol.UnsignedVarInt;
 
 import java.util.List;
 

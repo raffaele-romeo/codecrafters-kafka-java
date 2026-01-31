@@ -4,7 +4,7 @@ import api.common.RequestHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
-import model.Request;
+import model.RequestWithHeader;
 import model.header.RequestContext;
 
 public class RequestProcessor extends ChannelInboundHandlerAdapter {
@@ -15,15 +15,15 @@ public class RequestProcessor extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings("unchecked")
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
-            Request request = (Request) msg;
+            RequestWithHeader request = (RequestWithHeader) msg;
             var requestHeader = request.getHeader();
             var requestContext = new RequestContext(requestHeader.getCorrelationId(), requestHeader.getApiVersion());
-            var handler = apiRegistry.getHandler(request.getHeader().getApiKey());
+            RequestHandler handler = apiRegistry.getHandler(requestHeader.getApiKey());
 
-            var response = ((RequestHandler) handler).handle(requestContext, request.getBody());
+            var response = handler.handle(requestContext, request.getBody());
 
             System.out.println(response);
             ctx.writeAndFlush(response);

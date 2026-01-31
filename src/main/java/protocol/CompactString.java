@@ -16,7 +16,7 @@ public class CompactString {
         if (buf == null || buf.readableBytes() < 1) {
             return null;
         }
-        var lengthPlusOne = UnsignedVarInt.read(buf);
+        var lengthPlusOne = VarInt.readUnsigned(buf);
 
         if (lengthPlusOne == 0) {
             return null;
@@ -47,7 +47,7 @@ public class CompactString {
             length = value.length() + 1;
         }
 
-        UnsignedVarInt.write(buf, length);
+        VarInt.writeUnsigned(buf, length);
 
         buf.writeCharSequence(value, CHARSET);
     }

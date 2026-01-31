@@ -3,7 +3,7 @@ package nettycodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import model.Request;
+import model.RequestWithHeader;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class RequestDecoder extends ByteToMessageDecoder {
             return;
         }
 
-        Request request = Request.parse(messageSize, in);
+        RequestWithHeader request = RequestWithHeader.parse(messageSize, in);
 
         System.out.println(request);
         out.add(request);

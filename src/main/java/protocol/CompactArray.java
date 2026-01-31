@@ -15,7 +15,7 @@ public class CompactArray {
         if (buf == null || buf.readableBytes() < 1) {
             return null;
         }
-        var lengthPlusOne = UnsignedVarInt.read(buf);
+        var lengthPlusOne = VarInt.readUnsigned(buf);
 
         if (lengthPlusOne == 0) {
             return null;
@@ -34,11 +34,11 @@ public class CompactArray {
 
     public static <T> void write(ByteBuf buf, List<T> list, IOConsumer<T> writer) {
         if (list == null) {
-            UnsignedVarInt.write(buf, 0);
+            VarInt.writeUnsigned(buf, 0);
             return;
         }
 
-        UnsignedVarInt.write(buf, list.size() + 1);
+        VarInt.writeUnsigned(buf, list.size() + 1);
 
         for (T value : list) {
             writer.accept(buf, value);

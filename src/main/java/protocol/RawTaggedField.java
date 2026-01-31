@@ -16,15 +16,15 @@ class RawTaggedField {
     }
 
     static RawTaggedField read(ByteBuf byteBuf) {
-        int tag = UnsignedVarInt.read(byteBuf);
-        int size = UnsignedVarInt.read(byteBuf);
+        int tag = VarInt.readUnsigned(byteBuf);
+        int size = VarInt.readUnsigned(byteBuf);
         ByteBuf data = byteBuf.readBytes(size);
 
         return new RawTaggedField(tag, data);
     }
 
     void write(ByteBuf output) {
-        UnsignedVarInt.write(output, tag);
+        VarInt.writeUnsigned(output, tag);
         output.writeBytes(data);
     }
 

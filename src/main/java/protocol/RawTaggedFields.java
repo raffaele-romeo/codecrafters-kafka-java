@@ -13,7 +13,7 @@ public class RawTaggedFields {
     }
 
     public static RawTaggedFields read(ByteBuf buf) {
-        int numFields = UnsignedVarInt.read(buf);
+        int numFields = VarInt.readUnsigned(buf);
 
         if (numFields == 0) {
             return empty();
@@ -30,7 +30,7 @@ public class RawTaggedFields {
 
     public void write(ByteBuf output) {
         if (fields.isEmpty()) {
-            UnsignedVarInt.write(output, 0);
+            VarInt.writeUnsigned(output, 0);
             return;
         }
 
