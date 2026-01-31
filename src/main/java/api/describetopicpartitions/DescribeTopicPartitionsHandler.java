@@ -23,21 +23,20 @@ final public class DescribeTopicPartitionsHandler extends RequestHandler<Describ
         var file = new File("/tmp/kraft-combined-logs/__cluster_metadata-0/00000000000000000000.log");
         var buf = LogFileReader.read(file);
 
-       System.out.println(ByteBufUtil.prettyHexDump(buf));
+        System.out.println(ByteBufUtil.prettyHexDump(buf));
 
         try {
             var recordBatches = new ArrayList<RecordBatch>();
             var recordBatch = RecordBatch.read(buf);
 
             while (recordBatch.isPresent()) {
-                System.out.println("RecordBatch is: " + recordBatch.get());
                 recordBatches.add(recordBatch.get());
                 recordBatch = RecordBatch.read(buf);
             }
 
             var topicResponse = request.getData().getTopicRequests().stream().map(topicRequest ->
                     makeTopicResponse(topicRequest.name(), recordBatches)
-            ).toList();
+            ).sorted(TopicResponse.BY_NAME).toList();
 
             var data = new DescribeTopicPartitionsV0ResponseData(
                     0,

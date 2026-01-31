@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import model.acl.AclOperation;
 import protocol.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +17,9 @@ public record TopicResponse(
         AclOperation authorizedOperations,
         RawTaggedFields taggedFields
 ) {
+    public static final Comparator<TopicResponse> BY_NAME =
+            Comparator.comparing(TopicResponse::name);
+
     public void write(ByteBuf output) {
         errorCode.write(output);
         CompactString.write(output, name);
