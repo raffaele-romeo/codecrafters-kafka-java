@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 public enum ApiKey {
     API_VERSIONS(18, 0, 4),
+    FETCH(1, 0, 16),
     DESCRIBE_TOPIC_PARTITIONS(75, 0, 0);
 
     private final short key;

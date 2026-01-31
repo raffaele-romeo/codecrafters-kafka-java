@@ -20,7 +20,7 @@ public record RecordBatch(
         short producerEpoch,
         int baseSequence,
         int recordsLength,
-        List<model.record.Record> records
+        List<Record> records
 ) {
 
     public static final int RECORD_BATCH_HEADER_SIZE = 61;

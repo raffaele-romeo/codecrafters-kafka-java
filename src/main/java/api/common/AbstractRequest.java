@@ -20,6 +20,7 @@ public abstract class AbstractRequest {
         return switch (apiKey) {
             case API_VERSIONS -> ApiVersionsRequest.parse(input);
             case DESCRIBE_TOPIC_PARTITIONS -> DescribeTopicPartitionsRequest.parse(input);
+            case FETCH -> throw new UnsupportedOperationException();
         };
     }
 }

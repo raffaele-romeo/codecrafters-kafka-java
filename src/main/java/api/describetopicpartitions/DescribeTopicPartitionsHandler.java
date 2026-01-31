@@ -1,104 +1,41 @@
 package api.describetopicpartitions;
 
 import api.common.RequestHandler;
-import io.netty.buffer.ByteBufUtil;
 import model.*;
-import model.record.*;
 import model.acl.AclOperation;
 import model.header.RequestContext;
 import model.header.ResponseHeaderV1;
-import model.record.Record;
 import protocol.RawTaggedFields;
-import service.LogFileReader;
+import service.ClusterMetadataReader;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 final public class DescribeTopicPartitionsHandler extends RequestHandler<DescribeTopicPartitionsRequest, DescribeTopicPartitionsV0Response> {
+    private final ClusterMetadataReader clusterMetadataReader;
+
+    public DescribeTopicPartitionsHandler(ClusterMetadataReader clusterMetadataReader) {
+        this.clusterMetadataReader = clusterMetadataReader;
+    }
+
     @Override
     public DescribeTopicPartitionsV0Response handle(RequestContext requestContext, DescribeTopicPartitionsRequest request) {
-        var file = new File("/tmp/kraft-combined-logs/__cluster_metadata-0/00000000000000000000.log");
-        var buf = LogFileReader.read(file);
+        var metadataMap = clusterMetadataReader.loadMetadata();
 
-        System.out.println(ByteBufUtil.prettyHexDump(buf));
-
-        try {
-            var recordBatches = new ArrayList<RecordBatch>();
-            var recordBatch = RecordBatch.read(buf);
-
-            while (recordBatch.isPresent()) {
-                recordBatches.add(recordBatch.get());
-                recordBatch = RecordBatch.read(buf);
-            }
-
-            var topicResponse = request.getData().getTopicRequests().stream().map(topicRequest ->
-                    makeTopicResponse(topicRequest.name(), recordBatches)
-            ).sorted(TopicResponse.BY_NAME).toList();
-
-            var data = new DescribeTopicPartitionsV0ResponseData(
-                    0,
-                    topicResponse, (byte) -1, RawTaggedFields.empty());
-
-            return new DescribeTopicPartitionsV0Response(new ResponseHeaderV1(requestContext.correlationId(), RawTaggedFields.empty()), data);
-        } finally {
-            buf.release();
-        }
-    }
-
-    private TopicResponse makeTopicResponse(String topicName, List<RecordBatch> recordBatches) {
-        var topicRecordValues = getRecordValue(recordBatches, TopicRecordValue.class);
-        var partitionRecordValue = getRecordValue(recordBatches, PartitionRecordValue.class);
-
-        var topicIds = topicRecordValues.stream().filter(value -> value.topicName().equals(topicName))
-                .map(TopicRecordValue::topicId)
+        var topicResponses = request.getData().getTopicRequests().stream()
+                .map(req -> metadataMap.getOrDefault(req.name(), unknownTopicResponse(req.name())))
+                .sorted(Topic.BY_NAME)
                 .toList();
 
-        if (topicIds.isEmpty()) {
-            return unknownTopicResponse(topicName);
-        } else {
-            var partitions = partitionRecordValue.stream().filter(value -> value.topicId().equals(topicIds.getFirst()))
-                    .map(value -> new PartitionData(
-                            ErrorCode.NONE,
-                            value.partitionId(),
-                            value.leaderId(),
-                            value.leaderEpoch(),
-                            value.replicas(),
-                            value.inSyncReplicas(),
-                            new ArrayList<>(),
-                            new ArrayList<>(),
-                            new ArrayList<>(),
-                            RawTaggedFields.empty()
-                    )).toList();
+        var data = new DescribeTopicPartitionsV0ResponseData(
+                0,
+                topicResponses, (byte) -1, RawTaggedFields.empty());
 
-            return new TopicResponse(
-                    ErrorCode.NONE,
-                    topicName,
-                    topicIds.getFirst(),
-                    false,
-                    partitions,
-                    AclOperation.UNKNOWN,
-                    RawTaggedFields.empty()
-            );
-        }
+        return new DescribeTopicPartitionsV0Response(new ResponseHeaderV1(requestContext.correlationId(), RawTaggedFields.empty()), data);
     }
 
-    private <T extends RecordValue> List<T> getRecordValue(List<RecordBatch> recordBatches, Class<T> type) {
-        var records = recordBatches.stream().map(RecordBatch::records)
-                .flatMap(List::stream)
-                .toList();
-
-        return records.stream().map(Record::value)
-                .filter(Objects::nonNull)
-                .filter(type::isInstance)
-                .map(type::cast)
-                .toList();
-    }
-
-    private TopicResponse unknownTopicResponse(String topicName) {
-        return new TopicResponse(
+    private Topic unknownTopicResponse(String topicName) {
+        return new Topic(
                 ErrorCode.UNKNOWN_TOPIC_OR_PARTITION,
                 topicName,
                 UUID.fromString("00000000-0000-0000-0000-000000000000"),

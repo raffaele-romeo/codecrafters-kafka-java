@@ -2,6 +2,9 @@ package model.record;
 
 import io.netty.buffer.ByteBuf;
 
+import java.util.List;
+import java.util.Objects;
+
 public sealed interface RecordValue permits TopicRecordValue, PartitionRecordValue, FeatureLevelRecord {
     byte frameVersion();
 

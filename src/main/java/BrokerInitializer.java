@@ -7,6 +7,7 @@ import io.netty.channel.socket.SocketChannel;
 import model.ApiKey;
 import nettycodec.RequestDecoder;
 import nettycodec.ResponseEncoder;
+import service.ClusterMetadataReader;
 
 
 public class BrokerInitializer extends ChannelInitializer<SocketChannel> {
@@ -14,8 +15,9 @@ public class BrokerInitializer extends ChannelInitializer<SocketChannel> {
 
     public BrokerInitializer() {
         this.apiRegistry = new ApiRegistry();
+        var clusterMetadataReader = new ClusterMetadataReader();
         apiRegistry.add(ApiKey.API_VERSIONS, new ApiVersionsHandler());
-        apiRegistry.add(ApiKey.DESCRIBE_TOPIC_PARTITIONS, new DescribeTopicPartitionsHandler());
+        apiRegistry.add(ApiKey.DESCRIBE_TOPIC_PARTITIONS, new DescribeTopicPartitionsHandler(clusterMetadataReader));
     }
 
     @Override

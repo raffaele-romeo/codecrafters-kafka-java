@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-public record TopicResponse(
+public record Topic(
         ErrorCode errorCode,
         String name,
         UUID topicId,
@@ -17,8 +17,8 @@ public record TopicResponse(
         AclOperation authorizedOperations,
         RawTaggedFields taggedFields
 ) {
-    public static final Comparator<TopicResponse> BY_NAME =
-            Comparator.comparing(TopicResponse::name);
+    public static final Comparator<Topic> BY_NAME =
+            Comparator.comparing(Topic::name);
 
     public void write(ByteBuf output) {
         errorCode.write(output);
